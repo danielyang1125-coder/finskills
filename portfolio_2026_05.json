@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "strategy_name": "2026年5月进攻型组合",
+    "capital_total": 100000,
+    "currency": "CNY",
+    "target_return": 0.08,
+    "target_return_note": "组合整体目标收益+8%，触发后分批止盈",
+    "stop_loss": -0.05,
+    "stop_loss_note": "组合整体止损-5%，触发后减仓至50%",
+    "risk_level": "进攻型（高弹性、高波动）",
+    "investment_horizon": "1个月（2026年5月）",
+    "market": "A股",
+    "created_date": "2026-05-10",
+    "macro_backdrop": {
+      "economic_cycle": "复苏初期",
+      "manufacturing_pmi_latest": 50.3,
+      "manufacturing_pmi_trend": "连续2个月站上50（3月50.4→4月50.3）",
+      "monetary_policy": "宽松",
+      "style_regime": "小盘成长占优 → 小盘+周期双轮驱动"
+    }
+  },
+  "holdings": [
+    {
+      "name": "中证1000ETF",
+      "code": "sh512100",
+      "type": "ETF",
+      "role": "小盘成长核心仓位",
+      "weight": 0.30,
+      "amount": 30000,
+      "price": 3.506,
+      "quantity_lots": 85,
+      "cost": 29801,
+      "beta_category": "中高",
+      "entry_logic": "5月动量最强宽基之一；经济复苏初期小盘因子持续跑赢；资金从科创50溢出后的首选去向",
+      "profit_target": {
+        "rate": 0.07,
+        "amount": 2086,
+        "rationale": "中证1000历史月度75分位约+6-8%，顺势可达不贪心"
+      },
+      "stop_loss": {
+        "rate": -0.04,
+        "amount": -1192,
+        "rationale": "核心仓位不能深套，-4%意味着复苏逻辑可能被证伪"
+      },
+      "target_probability": "50-60%"
+    },
+    {
+      "name": "有色金属ETF",
+      "code": "sh512400",
+      "type": "ETF",
+      "role": "周期进攻主攻手",
+      "weight": 0.20,
+      "amount": 20000,
+      "price": 2.206,
+      "quantity_lots": 90,
+      "cost": 19854,
+      "beta_category": "高",
+      "entry_logic": "5月边际加速（+2.0% vs 4月+2.7%但仅9天）；PMI扩张→补库需求→工业金属受益；美元走弱预期叠加",
+      "profit_target": {
+        "rate": 0.10,
+        "amount": 1985,
+        "rationale": "有色月波动常态±8-12%，10%在历史合理区间内"
+      },
+      "stop_loss": {
+        "rate": -0.06,
+        "amount": -1191,
+        "rationale": "周期股需放宽容忍度，-6%可能只是正常回调"
+      },
+      "target_probability": "35-40%"
+    },
+    {
+      "name": "通信ETF",
+      "code": "sh515880",
+      "type": "ETF",
+      "role": "AI算力弹性仓位",
+      "weight": 0.15,
+      "amount": 15000,
+      "price": 1.430,
+      "quantity_lots": 104,
+      "cost": 14872,
+      "beta_category": "极高",
+      "entry_logic": "AI算力基建确定性资本开支方向；国常会明确加强算力网建设；4月已涨30%，5月进入高位震荡",
+      "profit_target": {
+        "rate": 0.08,
+        "amount": 1190,
+        "rationale": "4月已大涨，5月不能按4月标准设目标，+8%已算强势延续"
+      },
+      "stop_loss": {
+        "rate": -0.07,
+        "amount": -1041,
+        "rationale": "AI线波动极大，-7%在历史月波动常态范围内"
+      },
+      "target_probability": "30-35%"
+    },
+    {
+      "name": "巨化股份",
+      "code": "sh600160",
+      "type": "个股",
+      "role": "化工龙头α",
+      "weight": 0.12,
+      "amount": 12000,
+      "price": 35.58,
+      "quantity_lots": 3,
+      "cost": 10674,
+      "beta_category": "高",
+      "entry_logic": "氟化工绝对龙头；制冷剂配额制供给刚性+需求复苏=价格弹性大；申万化工指数4月+14.8%领涨全行业",
+      "profit_target": {
+        "rate": 0.12,
+        "amount": 1281,
+        "rationale": "个股月波动常态±10-15%，盈亏比1.5:1"
+      },
+      "stop_loss": {
+        "rate": -0.08,
+        "amount": -854,
+        "rationale": "个股集中风险，-8%纪律性止损保护本金"
+      },
+      "target_probability": "25-30%"
+    },
+    {
+      "name": "洛阳钼业",
+      "code": "sh603993",
+      "type": "个股",
+      "role": "有色高弹性个股α",
+      "weight": 0.12,
+      "amount": 12000,
+      "price": 20.20,
+      "quantity_lots": 5,
+      "cost": 10100,
+      "beta_category": "高",
+      "entry_logic": "铜+钴双主线；4月在有色板块滞涨有补涨空间；铜看工业复苏，钴看新能源需求",
+      "profit_target": {
+        "rate": 0.12,
+        "amount": 1212,
+        "rationale": "补涨逻辑+高弹性，盈亏比1.5:1"
+      },
+      "stop_loss": {
+        "rate": -0.08,
+        "amount": -808,
+        "rationale": "单一个股-8%纪律性止损"
+      },
+      "target_probability": "25-30%"
+    },
+    {
+      "name": "中国核电",
+      "code": "sh601985",
+      "type": "个股",
+      "role": "防御压舱石",
+      "weight": 0.11,
+      "amount": 11000,
+      "price": 9.07,
+      "quantity_lots": 12,
+      "cost": 10884,
+      "beta_category": "低（β≈0.6-0.7）",
+      "entry_logic": "公用事业5月+2.1%意外走强；核电审批重启+夏季用电高峰+高股息三重驱动；组合稳定器",
+      "profit_target": {
+        "rate": 0.05,
+        "amount": 544,
+        "rationale": "低β品种月波动通常±3-6%，+5%已是好月份"
+      },
+      "stop_loss": {
+        "rate": -0.03,
+        "amount": -327,
+        "rationale": "窄止损，低β品种跌超3%意味系统性风险，应整体降仓"
+      },
+      "target_probability": "40-50%"
+    }
+  ],
+  "portfolio_summary": {
+    "total_cost": 96185,
+    "cash_reserve": 3815,
+    "cash_reserve_note": "用于补仓或机动",
+    "position_ratio": 0.96,
+    "weighted_profit_target": 0.085,
+    "weighted_stop_loss": -0.055,
+    "weighted_risk_reward_ratio": 1.55,
+    "profit_target_amount": 8179,
+    "stop_loss_amount": -5289
+  },
+  "scenario_analysis": {
+    "optimistic": {
+      "probability": "~25%",
+      "return_range": "+8% 至 +10%",
+      "description": "3-4个标的触及止盈位，中小盘+有色+化工共振"
+    },
+    "base": {
+      "probability": "~50%",
+      "return_range": "+3% 至 +7%",
+      "description": "1-2个标的达标，其余温和上涨或横盘"
+    },
+    "conservative": {
+      "probability": "~25%",
+      "return_range": "-2% 至 +2%",
+      "description": "无人达标，市场震荡。5月PMI数据是最大变量"
+    }
+  },
+  "risk_management_rules": {
+    "individual_stop_loss": {
+      "rule": "任一标的亏损超各自止损线",
+      "action": "无条件卖出该标的，现金等待"
+    },
+    "portfolio_stop_loss": {
+      "rule": "组合总亏损超-5%（总资产<95,000元）",
+      "action": "整体减仓至50%以下，保留弹药"
+    },
+    "time_stop": {
+      "rule": "5月20日仍未达+3%（总资产<103,000元）",
+      "action": "降低月目标至+5%，减少冒险行为"
+    },
+    "profit_taking": {
+      "rule": "组合达到+8%（总资产≥108,000元）",
+      "action": "分批止盈：先卖个股（巨化+洛钼）→ 再减ETF → 留现金等下一机会。每次卖出1/3"
+    },
+    "key_risk_event": {
+      "event": "5月PMI数据公布（预计5月31日）跌破50",
+      "action": "科技+周期双线可能同时承压，提前减仓至60%以下"
+    }
+  },
+  "risk_disclaimer": "本配置为进攻型组合，单月目标8%属于高预期，实际收益可能大幅偏离。以上仅为基于公开数据和历史规律的分析，不构成投资建议。过往业绩不代表未来表现。投资有风险，入市需谨慎。"
+}
