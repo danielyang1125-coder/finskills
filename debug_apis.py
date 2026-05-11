@@ -1,75 +1,84 @@
-#!/usr/bin/env python3
-"""Debug financial & index APIs."""
-import requests, json, os
-os.environ['no_proxy'] = '*'
+import akshare as ak
+import pandas as pd
 
-s = requests.Session()
-s.trust_env = False
-s.headers.update({
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-    'Referer': 'https://data.eastmoney.com/',
-})
-
-fin_url = 'https://datacenter.eastmoney.com/secrets/api/data/v1/get'
-# Actually the correct URL is securities not secrets
-fin_url = 'https://datacenter.eastmoney.com/securities/api/data/v1/get'
-
-# Try different report names
-reports = [
-    'RPT_LICO_FN_CPD',
-    'RPT_DMSK_FN_INCOME',
-    'RPT_DMSK_FN_MAININDICATOR',
-    'RPT_DMSK_FN_BALANCE',
-]
-for rpt in reports:
+# Test 1: Index daily data
+print('=== Test index daily ===')
+for sym in ['sh000001', 'sh000688', 'sz399006']:
     try:
-        params = {'reportName': rpt, 'columns': 'SECURITY_CODE',
-                  'pageNumber': '1', 'pageSize': '3',
-                  'sortTypes': '-1', 'sortColumns': 'NOTICE_DATE',
-                  'source': 'WEB', 'client': 'WEB'}
-        r = s.get(fin_url, params=params, timeout=10)
-        d = r.json()
-        success = d.get('success')
-        msg = d.get('message', '')
-        has_data = d.get('result') is not None
-        print(f'{rpt}: success={success}, has_result={has_data}, msg={msg[:80]}')
+        df = ak.stock_zh_index_daily(symbol=sym)
+        if df is not None and not df.empty:
+            last_date = df.iloc[-1, 0]
+            print(f'{sym}: shape={df.shape}, last_date={last_date}, cols={list(df.columns)}')
+        else:
+            print(f'{sym}: empty/None')
     except Exception as e:
-        print(f'{rpt}: ERROR - {str(e)[:100]}')
+        print(f'{sym}: ERROR - {str(e)[:100]}')
 
-# Try CSI 800 index constituents from csindex.com.cn
-print('\n=== CSI 800 via csindex ===')
+# Test 2: Sector spot
+print()
+print('=== Test sector spot ===')
 try:
-    csindex_url = 'https://www.csindex.com.cn/csindex-home/index-list/query-index-component'
-    params = {'indexCode': '000906'}
-    headers = {
-        'User-Agent': 'Mozilla/5.0',
-        'Referer': 'https://www.csindex.com.cn/',
-    }
-    r = s.get(csindex_url, params=params, headers=headers, timeout=15)
-    print(f'Status: {r.status_code}, len: {len(r.text)}')
-    d = r.json()
-    if d.get('result') and d['result'].get('data'):
-        items = d['result']['data']
-        print(f'Constituents: {len(items)}')
-        if items:
-            print(f'Sample: {items[0]}')
+    df = ak.stock_board_industry_name_em()
+    print(f'sector_spot: shape={df.shape}, cols={list(df.columns)[:6]}')
+    print(f'first row: {df.iloc[0].to_dict()}')
 except Exception as e:
-    print(f'CSI 800 ERROR: {str(e)[:200]}')
+    print(f'sector_spot: ERROR - {str(e)[:100]}')
 
-# Try getting CSI 300 constituents from East Money
-print('\n=== CSI 300 via East Money concept board ===')
+# Test 3: CPI
+print()
+print('=== Test CPI ===')
 try:
-    url = 'https://push2.eastmoney.com/api/qt/clist/get'
-    params = {'pn': '1', 'pz': '5', 'po': '1', 'np': '1',
-              'ut': 'bd1d9ddb04089700cf9c27f6f7426281',
-              'fltt': '2', 'invt': '2', 'fid': 'f3',
-              'fs': 'b:BK0500', 'fields': 'f12,f14'}
-    r = s.get(url, params=params, timeout=10)
-    print(f'Status: {r.status_code}')
-    d = r.json()
-    total = d.get('data', {}).get('total', 0)
-    print(f'BK0500 (沪深300): total={total}')
-    if total > 0:
-        print(f'Samples: {d["data"]["diff"][:3]}')
+    df = ak.macro_china_cpi_yearly()
+    print(f'cpi: shape={df.shape}, cols={list(df.columns)}')
+    if not df.empty:
+        print(f'last row: {df.iloc[-1].to_dict()}')
 except Exception as e:
-    print(f'BK0500 ERROR: {str(e)[:200]}')
+    print(f'cpi: ERROR - {str(e)[:100]}')
+
+# Test 4: PMI
+print()
+print('=== Test PMI ===')
+try:
+    df = ak.macro_china_pmi()
+    print(f'pmi: shape={df.shape}, cols={list(df.columns)}')
+    print(f'last 3 rows:')
+    print(df.tail(3))
+except Exception as e:
+    print(f'pmi: ERROR - {str(e)[:100]}')
+
+# Test 5: Northbound
+print()
+print('=== Test Northbound ===')
+try:
+    df = ak.stock_hsgt_hist_em(symbol='北向资金')
+    print(f'northbound: shape={df.shape}, cols={list(df.columns)}')
+    print(f'last 3 rows:')
+    print(df.tail(3))
+except Exception as e:
+    print(f'northbound: ERROR - {str(e)[:100]}')
+
+# Test 6: SW index
+print()
+print('=== Test SW index ===')
+try:
+    df = ak.sw_index_daily(symbol='801010')
+    print(f'sw_index: shape={df.shape}, cols={list(df.columns)}')
+    if not df.empty:
+        print(f'date range: {df.iloc[0,0]} to {df.iloc[-1,0]}')
+        print(f'last 3 rows:')
+        print(df.tail(3))
+except Exception as e:
+    print(f'sw_index: ERROR - {str(e)[:100]}')
+
+# Test 7: SW spot
+print()
+print('=== Test SW spot ===')
+try:
+    df = ak.sw_index_spot()
+    print(f'sw_spot: shape={df.shape}, cols={list(df.columns)[:6]}')
+    print(f'first row: {df.iloc[0].to_dict()}')
+except Exception as e:
+    print(f'sw_spot: ERROR - {str(e)[:100]}')
+
+print()
+print('Done.')

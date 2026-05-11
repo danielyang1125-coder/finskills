@@ -83,6 +83,55 @@ license: Apache-2.0
 
 如需实时市场数据支撑分析，请使用**金融数据工具包**技能（`findata-toolkit-cn`）。该工具包提供A股实时行情、财务指标、董监高增减持、北向资金、宏观数据等功能，所有数据源免费，无需API密钥。
 
+### 数据获取最佳实践（实战验证）
+
+**1. 分层验证，先探后取**
+
+不要一次写完完整分析脚本再运行——先做API探测，再做结构验证，最后组装。
+
+```
+第0层: 环境探测 (30s)
+  - Python 是否可用
+  - AKShare 是否安装
+  - 网络是否通（尝试一个轻量API调用）
+
+第1层: API探测 (60s)
+  - 对每个待用函数，确认存在: dir(ak) 中搜索匹配项
+  - 确认列结构: df.columns / df.dtypes / df.head(2)
+  - 确认数据类型: type(df.iloc[0, 0]) — datetime.date 和 str 不兼容！
+
+第2层: 小步组装
+  - 先跑通一个指数 → 验证收益率在合理范围(-30%~+30%)
+  - 再跑通一个宏观指标 → 验证数值合理
+  - 最后组装完整脚本
+```
+
+**2. 已验证的AKShare函数映射**
+
+| 数据需求 | 正确函数 | ⚠️ 常见错误/陷阱 |
+|---------|---------|-----------------|
+| 上证/科创/创业板 日线 | `stock_zh_index_daily(symbol='sh000001')` | date 列是 `datetime.date` 类型，需转 str 再筛选 |
+| SW行业指数 | `index_hist_sw(symbol='801080')` | ~`sw_index_daily`~ 不存在。close 在 iloc[:, 4] 而非 iloc[:, 1]。返回自2000年的累计指数，不适合精确计算单月/双月收益率 |
+| LPR | `macro_china_lpr()` | 可靠 |
+| PMI制造业 | `index_pmi_man_cx()` | ~`macro_china_pmi`~ 返回2008年旧数据 |
+| PMI非制造业 | `index_pmi_ser_cx()` | — |
+| M2 | `macro_china_money_supply()` | 单位：亿元 |
+| GDP | `macro_china_gdp()` | 季度数据 |
+| CPI | AKShare `macro_china_cpi_yearly()` → **Tushare `pro.cpi()`** | AKShare 的 "现值" 为 NaN。Tushare 返回干净的 `nt_val` 全国同比 |
+| PPI | AKShare `macro_china_ppi_yearly()` → **Tushare `pro.ppi()`** | 同上。Tushare 返回 `ppi_yoy` 全部工业品当月同比 |
+| 北向资金 | AKShare `stock_hsgt_hist_em()` → **Tushare `pro.moneyflow_hsgt()`** | AKShare 的 "当日成交净买额" 全 NaN。Tushare 返回 `ggt_ss`/`ggt_sz` |
+
+**3. 数据源策略**
+
+**始终通过 AKShare 封装层获取数据**，不直接调东方财富裸API。原因：AKShare 内部处理了代理、SSL、重试、请求头配置。直接调 `push2.eastmoney.com` 可能因网络策略被拒绝，但 AKShare 走同一源能成功。
+
+**4. Shell输出（Windows）**
+
+若 `task_shell_wait` 无法返回输出，统一用：
+```bash
+python script.py > _log.txt 2>&1 && type _log.txt
+```
+
 ## 量价行业轮动框架（互补方法）
 
 作为宏观驱动轮动的互补工具，本框架基于量价数据提供更高频的行业信号。宏观轮动回答"应该配置哪些行业"，量价轮动回答"市场资金正在流向哪些行业"——两者交叉验证可提升判断置信度。
